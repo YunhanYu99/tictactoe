@@ -22,11 +22,13 @@ def get_winner(Board):
             elif Board[0][i] == Board[1][i] == Board[2][i]:
                 iswin = Board[0][i]
                 break
-    if iswin == "None":
-        iswin = None
+    
+    if iswin == 'X' or iswin == 'O':
+        return iswin
+    elif (None in Board[0]) or (None in Board[1]) or (None in Board[2]):
+        return None
     else:
-        iswin = iswin
-    return iswin
+        return 'Draw'
 
 def other_player(player):
     if player == 'X':
@@ -39,3 +41,7 @@ def update_board(current_board,target_position,current_player):
     target_position_col = int(target_position[1])-1
     current_board[target_position_row][target_position_col] = current_player
     return current_board
+
+def print_board(board):
+    output_board = str(board[0])+"\n"+str(board[1])+"\n"+str(board[2])
+    return output_board
