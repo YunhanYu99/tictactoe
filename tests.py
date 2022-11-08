@@ -16,9 +16,9 @@ class TestLogic(unittest.TestCase):
         [None,None,None],
         ]
         board_3 = [
-            ['O',None,'O'],
-            [None,'O',None],
-            [None,'O','X'],            
+            ['O','X','O'],
+            ['X','O','O'],
+            ['X','O','X'],            
         ]
         board_4 = [
             ['O',None,'O'],
@@ -27,7 +27,7 @@ class TestLogic(unittest.TestCase):
         ]
         self.assertEqual(logic.get_winner(board_1),'X')
         self.assertEqual(logic.get_winner(board_2),None)
-        self.assertEqual(logic.get_winner(board_3),None)
+        self.assertEqual(logic.get_winner(board_3),'Draw')
         self.assertEqual(logic.get_winner(board_4),'O')
 
     def test_make_empty_board(self):
@@ -43,7 +43,7 @@ class TestLogic(unittest.TestCase):
         self.assertEqual(logic.other_player(current_player_X),"O")
         self.assertEqual(logic.other_player(current_player_O),"X")
 
-    def update_board(self):
+    def test_update_board(self):
         current_board = [
         ["X","O","O"],
         [None,"X",None],
@@ -51,12 +51,23 @@ class TestLogic(unittest.TestCase):
         ]
         target_position = '23'
         current_player = 'O'
-        self.assertEqual(logic.other_player(current_board,target_position,current_player),
+        self.assertEqual(logic.update_board(current_board,target_position,current_player),
         [
         ["X","O","O"],
         [None,"X","O"],
         [None,None,None],
         ])
+'''    def test_print_board(self):
+        board = [
+        ["X","O","O"],
+        [None,"X",None],
+        [None,None,None],
+        ]
+        print(logic.print_board(board))
+        self.assertEqual(logic.print_board(board),
+        "['X', 'O', 'O']"
+        "[None, 'X', None]"
+        "[None, None, None]")'''
 
 
 if __name__ == '__main__':
