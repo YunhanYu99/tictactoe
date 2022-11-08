@@ -22,10 +22,10 @@ def get_winner(Board):
             elif Board[0][i] == Board[1][i] == Board[2][i]:
                 iswin = Board[0][i]
                 break
-    if iswin == "":
+    if iswin == "None":
         iswin = None
     else:
-        print(iswin,"Won")
+        iswin = iswin
     return iswin
 
 def other_player(player):

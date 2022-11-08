@@ -12,8 +12,10 @@ if __name__ == '__main__':
     current_player =input("Please input the first player(X or O):")
     while winner == None:
         target_position = input("Please input the position you want to put(eg: 13 for row 1 and col 3):")
-        update_board
-        print("TODO: take a turn")
+        update_board(board,target_position,current_player)
+        current_player = other_player(current_player)
+        print("Take a turn, %s turn",current_player)
+        
         # TODO: Show the board to user.
         # TODO: Input a move from the player.
         # TODO: Update the board.
