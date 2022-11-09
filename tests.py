@@ -57,17 +57,15 @@ class TestLogic(unittest.TestCase):
         [None,"X","O"],
         [None,None,None],
         ])
-'''    def test_print_board(self):
+    def test_print_board(self):
         board = [
         ["X","O","O"],
         [None,"X",None],
         [None,None,None],
         ]
-        print(logic.print_board(board))
-        self.assertEqual(logic.print_board(board),
-        "['X', 'O', 'O']"
-        "[None, 'X', None]"
-        "[None, None, None]")'''
+        # logic.print_board(board) try the string output(do not use print it will change the \n in a new row)
+        self.assertEqual(logic.print_board(board), '|X|O|O|\n-------\n| |X| |\n-------\n| | | |\n-------\n')
+
 
 
 if __name__ == '__main__':

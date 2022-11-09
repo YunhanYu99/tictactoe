@@ -42,6 +42,28 @@ def update_board(current_board,target_position,current_player):
     current_board[target_position_row][target_position_col] = current_player
     return current_board
 
+'''
+Original print board without change the None
 def print_board(board):
-    output_board = str(board[0])+"\n"+str(board[1])+"\n"+str(board[2])
+    output_board = ''
+    for i in range(3):
+        for j in range(3):
+            output_board = output_board+board[i][j]
+        output_board = output_board + '\n'
+    return output_board
+    '''
+
+def print_board(board):
+
+    output_board = ''
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == None:
+                str_new = ' '
+            else:
+                str_new = str(board[i][j])
+            output_board = output_board + '|' + str_new 
+        output_board = output_board + '|' + '\n'
+        output_board = output_board + '-------'
+        output_board = output_board + '\n'
     return output_board
