@@ -1,10 +1,10 @@
 # This file contains the Command Line Interface (CLI) for
 # the Tic-Tac-Toe game. This is where input and output happens.
 # For core game logic, see logic.py.
-from logic import (get_winner, make_empty_board, other_player, print_board,
-                   update_board)
+from logic import *
 
 
+'''
 class Game:
     def __init__(self,playerO,playerX):
         self._board = Board()
@@ -57,23 +57,22 @@ class Human:
         return target_position
 
 class Bot:
-    def get_move(self,board):
+    def get_move(board):
         import random
-        target_row = 3
-        target_col = 3
-        while target_row == 3 or target_col == 3:
-            row = random.randint(0,2)
-            if None in board[row]:
-                col = random.randint(0,2)
-                if board[row][col] == None:
-                    target_row = row
-                    target_col = col
+        target_row = 4
+        target_col = 4
+        while target_row == 4 or target_col == 4:
+            row = random.randint(1,3) #same as the input with the user row 1-3 and col 1-3
+            col = random.randint(1,3)
+            if board[row-1][col-1] == None:
+                target_row = row
+                target_col = col
         target_position = str(target_row)+str(target_col)
         return target_position
 
 game = Game(Human(),Bot())
 game.run
-
+'''
 
 
 if __name__ == '__main__':
@@ -82,15 +81,23 @@ if __name__ == '__main__':
     game_type = int(input("Please input the number of the player(1 or 2):"))
     if game_type == 2:
         current_player =input("Please input the first player(X or O):")
+    else:
+        current_player = 'O'
     print(print_board(board))
     while winner == None:
         target_position = input("Please input the position you want to put(eg: 13 for row 1 and col 3):")
         board = update_board(board,target_position,current_player)
-        current_player = other_player(current_player)
-        print("Take a turn, %s turn" %current_player)
         print(print_board(board))
         winner = get_winner(board)
-        other_player(current_player)
+        current_player = other_player(current_player)
+        if game_type == 1:
+            target_position = get_move(board)
+            board = update_board(board,target_position,current_player)
+            print(print_board(board))
+            winner = get_winner(board)
+            current_player = other_player(current_player)
+        else:
+            print("Take a turn, %s turn" %current_player)
     if winner == "X" or winner == "O":
         print("The winner is %s !" %winner)
     elif winner == "Draw":

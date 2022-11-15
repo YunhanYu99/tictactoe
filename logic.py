@@ -65,3 +65,16 @@ def print_board(board):
         output_board = output_board + '-------'
         output_board = output_board + '\n'
     return output_board
+
+def get_move(board):
+    import random
+    target_row = 4
+    target_col = 4
+    while target_row == 4 or target_col == 4:
+        row = random.randint(1,3) #same as the input with the user row 1-3 and col 1-3
+        col = random.randint(1,3)
+        if board[row-1][col-1] == None:
+            target_row = row
+            target_col = col
+    target_position = str(target_row)+str(target_col)
+    return target_position
