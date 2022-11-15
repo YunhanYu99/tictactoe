@@ -1,29 +1,75 @@
 # This file contains the Command Line Interface (CLI) for
 # the Tic-Tac-Toe game. This is where input and output happens.
 # For core game logic, see logic.py.
-from logic import make_empty_board
-from logic import update_board
-from logic import get_winner
-from logic import other_player
-from logic import print_board
-from logic import 
+from logic import (get_winner, make_empty_board, other_player, print_board,
+                   update_board)
+
 
 class Game:
     def __init__(self,playerO,playerX):
         self._board = Board()
         self._playerO = playerO
         self._playerX = playerX
+
+    def game_not_over(self):
+
+
     def run(self):
         while game_not_over:
             make_move(self._board, current_player)
+        
+    
+
+
+class Board:
+    "The game board of the tic-tac-toe game"
+    def __init__(self):
+        self.board = [
+        [None,None,None],
+        [None,None,None],
+        [None,None,None],
+            ]
+    
+    def print_format_board(self):
+        output_board = ''
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == None:
+                    str_new = ' '
+                else:
+                    str_new = str(self.board[i][j])
+                output_board = output_board + '|' + str_new 
+            output_board = output_board + '|' + '\n'
+            output_board = output_board + '-------'
+            output_board = output_board + '\n'
+        return print(output_board)
+
+    def update_board(self,target_position,current_player):
+        target_position_row = int(target_position[0])-1
+        target_position_col = int(target_position[1])-1
+        self.board[target_position_row][target_position_col] = current_player
+        return self.board
+
 
 class Human:
-    def get_move(self,board):
-        return parse_move(input())
+    def get_move(self):
+        target_position = input("Please input the position you want to put(eg: 13 for row 1 and col 3):")
+        return target_position
 
 class Bot:
     def get_move(self,board):
-        return random_position(board)
+        import random
+        target_row = 3
+        target_col = 3
+        while target_row == 3 or target_col == 3:
+            row = random.randint(0,2)
+            if None in board[row]:
+                col = random.randint(0,2)
+                if board[row][col] == None:
+                    target_row = row
+                    target_col = col
+        target_position = str(target_row)+str(target_col)
+        return target_position
 
 game = Game(Human(),Bot())
 game.run
@@ -33,7 +79,9 @@ game.run
 if __name__ == '__main__':
     board = make_empty_board()
     winner = None
-    current_player =input("Please input the first player(X or O):")
+    game_type = int(input("Please input the number of the player(1 or 2):"))
+    if game_type == 2:
+        current_player =input("Please input the first player(X or O):")
     print(print_board(board))
     while winner == None:
         target_position = input("Please input the position you want to put(eg: 13 for row 1 and col 3):")
