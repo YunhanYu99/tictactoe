@@ -6,6 +6,29 @@ from logic import update_board
 from logic import get_winner
 from logic import other_player
 from logic import print_board
+from logic import 
+
+class Game:
+    def __init__(self,playerO,playerX):
+        self._board = Board()
+        self._playerO = playerO
+        self._playerX = playerX
+    def run(self):
+        while game_not_over:
+            make_move(self._board, current_player)
+
+class Human:
+    def get_move(self,board):
+        return parse_move(input())
+
+class Bot:
+    def get_move(self,board):
+        return random_position(board)
+
+game = Game(Human(),Bot())
+game.run
+
+
 
 if __name__ == '__main__':
     board = make_empty_board()
