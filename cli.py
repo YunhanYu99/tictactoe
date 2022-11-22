@@ -2,6 +2,9 @@
 # the Tic-Tac-Toe game. This is where input and output happens.
 # For core game logic, see logic.py.
 #from logic import *
+# This file is where game logic lives. No input
+# or output happens here. The logic in this file
+# should be unit-testable.
 from random import random
 
 def make_empty_board():
@@ -22,10 +25,11 @@ class Game:
         if self.player_number == 1:
             #self.player_X = Human(1)
             #self.player_O = Bot(1)
-            self.start_game()
+            self.start_game(1)
         elif self.player_number == 2:
-            self.player_X = Human(1)
-            self.player_O = Human(2)
+            #self.player_X = Human(1)
+            #self.player_O = Human(2)
+            self.start_game(2)
     
     def get_winner(self,Board):
         iswin = ""
@@ -57,11 +61,11 @@ class Game:
         elif player == 'O':
             return 'X'
 
-    def update_board(self,target_position,current_player):
+    def update_board(self,board,target_position,current_player):
         target_position_row = int(target_position[0])-1
         target_position_col = int(target_position[1])-1
-        self.board[target_position_row][target_position_col] = current_player
-        return self.board
+        board[target_position_row][target_position_col] = current_player
+        return board
 
     def print_board(self,board):
         output_board = ''
@@ -77,10 +81,9 @@ class Game:
             output_board = output_board + '\n'
         return output_board
 
-    def start_game(self):#,board,current_player):
-            board = make_empty_board()
+    def start_game(self,game_type):
+            board = self.board
             winner = None
-            game_type = int(input("Please input the number of the player(1 or 2):"))
             if game_type == 2:
                 current_player =input("Please input the first player(X or O):")
             else:
@@ -91,13 +94,13 @@ class Game:
                 board = self.update_board(board,target_position,current_player)
                 print(self.print_board(board))
                 winner = self.get_winner(board)
-                current_player = Player.other_player(current_player)
+                current_player = self.other_player(current_player)
                 if game_type == 1:
-                    target_position = Human.get_move(board)
+                    target_position = Bot.random_move(self.board)
                     board = self.update_board(board,target_position,current_player)
                     print(self.print_board(board))
                     winner = self.get_winner(board)
-                    current_player = Player.other_player(current_player)
+                    current_player = self.other_player(current_player)
                 else:
                     print("Take a turn, %s turn" %current_player)
             if winner == "X" or winner == "O":
@@ -106,9 +109,9 @@ class Game:
                 print("This game is draw!")
 
 
-class Player:
-    def __init__(self,playername):
-        self.playername = playername
+#class Player():
+    #def __init__(self,playername):
+    #    self.playername = playername
     
     def first_player(self):
         first_player = input("Please in put the icon you want(X or O):")
@@ -120,16 +123,18 @@ class Player:
         elif player == 'O':
             return 'X'
 
-class Human(Player):
+class Human():
     def __init__(self,playername):
+        super().__init__()
         self.playername = playername
         
     def get_move(self):
         target_position = input("Please input the position you want to put(eg: 13 for row 1 and col 3):")
         return target_position
 
-class Bot(Player):
+class Bot():
     def __init__(self,player):
+        super().__init__()
         self.player = player
 
     def random_move(self,board):
@@ -149,6 +154,7 @@ if __name__ == '__main__':
     game = Game()
 
 
+    
 '''
 Without OOP
 if __name__ == '__main__':
