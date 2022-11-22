@@ -20,7 +20,7 @@ def get_winner(Board):
             elif Board[0][i] == Board[1][i] == Board[2][i]:
                 iswin = Board[0][i]
                 break
-    
+
     if iswin == 'X' or iswin == 'O':
         return iswin
     elif (None in Board[0]) or (None in Board[1]) or (None in Board[2]):
@@ -52,7 +52,6 @@ def print_board(board):
     '''
 
 def print_board(board):
-
     output_board = ''
     for i in range(3):
         for j in range(3):
