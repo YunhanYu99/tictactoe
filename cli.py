@@ -5,7 +5,6 @@
 # This file is where game logic lives. No input
 # or output happens here. The logic in this file
 # should be unit-testable.
-from random import random
 
 def make_empty_board():
     return [
@@ -23,13 +22,9 @@ class Game:
         self.board = make_empty_board()
         self.player_number = game_type()
         if self.player_number == 1:
-            #self.player_X = Human(1)
-            #self.player_O = Bot(1)
-            self.start_game(1)
+            self.start_game(1,self.board)
         elif self.player_number == 2:
-            #self.player_X = Human(1)
-            #self.player_O = Human(2)
-            self.start_game(2)
+            self.start_game(2,self.board)
     
     def get_winner(self,Board):
         iswin = ""
@@ -55,12 +50,6 @@ class Game:
         else:
             return 'Draw'
 
-    def other_player(self, player):
-        if player == 'X':
-            return 'O'
-        elif player == 'O':
-            return 'X'
-
     def update_board(self,board,target_position,current_player):
         target_position_row = int(target_position[0])-1
         target_position_col = int(target_position[1])-1
@@ -81,38 +70,6 @@ class Game:
             output_board = output_board + '\n'
         return output_board
 
-    def start_game(self,game_type):
-            board = self.board
-            winner = None
-            if game_type == 2:
-                current_player =input("Please input the first player(X or O):")
-            else:
-                current_player = 'O'
-            print(self.print_board(board))
-            while winner == None:
-                target_position = input("Please input the position you want to put(eg: 13 for row 1 and col 3):")
-                board = self.update_board(board,target_position,current_player)
-                print(self.print_board(board))
-                winner = self.get_winner(board)
-                current_player = self.other_player(current_player)
-                if game_type == 1:
-                    target_position = Bot.random_move(self.board)
-                    board = self.update_board(board,target_position,current_player)
-                    print(self.print_board(board))
-                    winner = self.get_winner(board)
-                    current_player = self.other_player(current_player)
-                else:
-                    print("Take a turn, %s turn" %current_player)
-            if winner == "X" or winner == "O":
-                print("The winner is %s !" %winner)
-            elif winner == "Draw":
-                print("This game is draw!")
-
-
-#class Player():
-    #def __init__(self,playername):
-    #    self.playername = playername
-    
     def first_player(self):
         first_player = input("Please in put the icon you want(X or O):")
         return first_player
@@ -123,21 +80,68 @@ class Game:
         elif player == 'O':
             return 'X'
 
-class Human():
-    def __init__(self,playername):
+    def start_game(self,game_type,board):
+            board = self.board
+            winner = None
+            if game_type == 2:
+                current_player = self.first_player()
+            else:
+                current_player = 'O'
+            #print board
+            print(self.print_board(board))
+            while winner != "X" or winner != "X" or winner != "Draw":
+                #get move
+                human = Human()
+                target_position = human.get_move()
+                #update & print board
+                board = self.update_board(board,target_position,current_player)
+                print(self.print_board(board))
+                #get winner
+                is_win = self.get_winner(board)
+                winner = self.game_state(is_win,board)
+                if winner != "X" or winner != "O":
+                    # Robot player
+                    if game_type == 1:
+                        current_player = self.other_player(current_player)
+                        bot = Bot()
+                        target_position = bot.random_move(board)
+                        board = self.update_board(board,target_position,current_player)
+                        print(self.print_board(board))
+                        winner = self.get_winner(board)
+                        current_player = self.other_player(current_player)
+                    # Human player
+                    else:
+                        current_player = self.other_player(current_player)
+                        print("Take a turn, %s turn" %current_player)
+            if winner == "X" or winner == "O":
+                print("The winner is %s !" %winner)
+            elif winner == "Draw":
+                print("This game is draw!")
+
+
+'''
+class Player():
+    def __init__(self):
         super().__init__()
-        self.playername = playername
+        return None
+'''
+
+class Human():
+    def __init__(self):
+        super().__init__()
+        return None
         
     def get_move(self):
         target_position = input("Please input the position you want to put(eg: 13 for row 1 and col 3):")
         return target_position
 
 class Bot():
-    def __init__(self,player):
+    def __init__(self):
         super().__init__()
-        self.player = player
+        return None
 
     def random_move(self,board):
+        import random
         target_row = 4
         target_col = 4
         while target_row == 4 or target_col == 4:
