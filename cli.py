@@ -27,7 +27,7 @@ class Game:
             self.start_game(2,self.board)
     
     def get_winner(self,Board):
-        iswin = ""
+        iswin = None
         if Board[0][0] == Board[1][1] == Board[2][2] or Board[0][2] == Board[1][1] == Board[2][0]:
             iswin = Board[1][1]
         else:
@@ -89,7 +89,7 @@ class Game:
                 current_player = 'O'
             #print board
             print(self.print_board(board))
-            while winner != "X" or winner != "X" or winner != "Draw":
+            while winner == None:
                 #get move
                 human = Human()
                 target_position = human.get_move()
@@ -99,7 +99,7 @@ class Game:
                 #get winner
                 is_win = self.get_winner(board)
                 winner = self.game_state(is_win,board)
-                if winner != "X" or winner != "O":
+                if winner == None:
                     # Robot player
                     if game_type == 1:
                         current_player = self.other_player(current_player)
@@ -107,7 +107,9 @@ class Game:
                         target_position = bot.random_move(board)
                         board = self.update_board(board,target_position,current_player)
                         print(self.print_board(board))
-                        winner = self.get_winner(board)
+                        is_win = self.get_winner(board)
+                        winner = self.game_state(is_win,board)
+                        print(winner)
                         current_player = self.other_player(current_player)
                     # Human player
                     else:
@@ -119,13 +121,7 @@ class Game:
                 print("This game is draw!")
 
 
-'''
-class Player():
-    def __init__(self):
-        super().__init__()
-        return None
-'''
-
+                
 class Human():
     def __init__(self):
         super().__init__()
