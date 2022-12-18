@@ -10,6 +10,7 @@ import pandas as pd
 from record import *
 games_filename = "/Users/yunhan/week5/tictactoe/game_record.csv"
 move_filename = "/Users/yunhan/week5/tictactoe/move_record.csv"
+result_filename = "/Users/yunhan/week5/tictactoe/result.csv"
 
 def make_empty_board():
     return [
@@ -89,6 +90,24 @@ class Game:
             return 'O' 
         elif player == 'O':
             return 'X'
+    
+    def record_result(self, result, player_name,winner_name):
+        exist = result.loc[result['PlayerName'] == player_name]
+        if exist.empty:
+            result.loc[len(result)] = {
+                "PlayerName":player_name,
+                "WinTimes":0,
+                "LoseTimes":0,
+                "DrawTimes":0
+            }
+            exist = result.loc[len(result)-1]
+        if winner_name == player_name:
+            result.loc[result[result["PlayerName"] == player_name].index, "WinTimes"] += 1
+        elif winner_name == "Draw":
+            result.loc[result[result["PlayerName"] == player_name].index, "DrawTimes"] += 1
+        else:
+            result.loc[result[result["PlayerName"] == player_name].index, "LoseTimes"] += 1
+        return result
 
     def start_game(self,game_type,board):
         games = begin_data()
@@ -96,6 +115,9 @@ class Game:
 
         moves = record_move()
         # start record move
+
+        result = result_record()
+        # all player rank result file
 
         turn = 1
 
@@ -158,29 +180,36 @@ class Game:
                 # Human player
                 current_player = self.other_player(current_player)
                 print("Take a turn, %s turn" %current_player)
-        if winner == "X" or winner == "O":
-            print("The winner is %s !" %winner)
-        elif winner == "Draw":
-            print("This game is draw!")
-
         if winner == "X":
             winner_name = player_name_X
         elif winner == "O":
             winner_name = player_name_O
         else:
             winner_name = "Draw"
+        
+        if winner == "X" or winner == "O":
+            print("The winner is %s !" %winner_name)
+        elif winner == "Draw":
+            print("This game is draw!")
+        
         games.loc[len(games)] = {
             "Game ID":len(games)+1,
             "Player 1":player_name_O,
             "Player 2":player_name_X,
             "Winner":winner_name,
             }
+        self.record_result(result, player_name_X,winner_name)
+        self.record_result(result, player_name_O,winner_name)
+
+        
 
         moves.to_csv(move_filename, encoding='utf-8', index=False)
         games.to_csv(games_filename, encoding='utf-8', index=False)
+        result.to_csv(result_filename, encoding='utf-8', index=False)
 
 
-                
+
+
 class Human():
     def __init__(self):
         super().__init__()
@@ -207,7 +236,6 @@ class Bot():
                 target_col = col
         target_position = str(target_row)+str(target_col)
         return target_position
-
 
 
 if __name__ == '__main__':
