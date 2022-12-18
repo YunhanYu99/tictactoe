@@ -6,6 +6,11 @@
 # or output happens here. The logic in this file
 # should be unit-testable.
 
+import pandas as pd
+from record import *
+games_filename = "/Users/yunhan/week5/tictactoe/game_record.csv"
+move_filename = "/Users/yunhan/week5/tictactoe/move_record.csv"
+
 def make_empty_board():
     return [
         [None,None,None],
@@ -71,54 +76,108 @@ class Game:
         return output_board
 
     def first_player(self):
-        first_player = input("Please in put the icon you want(X or O):")
+        first_player = input("Please input the icon you want(X or O):")
         return first_player
+
+    def get_player_name(self,current_player):
+    # Get player name
+        player_name = input("Please input the player name of %s:"%current_player)
+        return player_name
     
     def other_player(self,player):
         if player == 'X':
-            return 'O' # FIXME
+            return 'O' 
         elif player == 'O':
             return 'X'
 
     def start_game(self,game_type,board):
-            board = self.board
-            winner = None
-            if game_type == 2:
-                current_player = self.first_player()
+        games = begin_data()
+        # start record game
+
+        moves = record_move()
+        # start record move
+
+        turn = 1
+
+        board = self.board
+        winner = None
+        if game_type == 2:
+            current_player = self.first_player()
+            if current_player == "X":
+                player_name_X = self.get_player_name(current_player)
+                player_name_O = self.get_player_name("O")
             else:
-                current_player = 'O'
-            #print board
+                player_name_O = self.get_player_name(current_player)
+                player_name_X = self.get_player_name("X")
+
+        else:
+            current_player = 'O'
+            player_name_O = self.get_player_name(current_player)
+            player_name_X = "Bot"
+
+        #print board
+        print(self.print_board(board))
+        while winner == None:
+            #get move
+            human = Human()
+            target_position = human.get_move()
+            #update & print board
+            board = self.update_board(board,target_position,current_player)
             print(self.print_board(board))
-            while winner == None:
-                #get move
-                human = Human()
-                target_position = human.get_move()
-                #update & print board
-                board = self.update_board(board,target_position,current_player)
-                print(self.print_board(board))
-                #get winner
-                is_win = self.get_winner(board)
-                winner = self.game_state(is_win,board)
-                if winner == None:
-                    # Robot player
-                    if game_type == 1:
-                        current_player = self.other_player(current_player)
-                        bot = Bot()
-                        target_position = bot.random_move(board)
-                        board = self.update_board(board,target_position,current_player)
-                        print(self.print_board(board))
-                        is_win = self.get_winner(board)
-                        winner = self.game_state(is_win,board)
-                        print(winner)
-                        current_player = self.other_player(current_player)
-                    # Human player
-                    else:
-                        current_player = self.other_player(current_player)
-                        print("Take a turn, %s turn" %current_player)
-            if winner == "X" or winner == "O":
-                print("The winner is %s !" %winner)
-            elif winner == "Draw":
-                print("This game is draw!")
+            #get winner
+            is_win = self.get_winner(board)
+            winner = self.game_state(is_win,board)
+            if current_player == "X":
+                current_player_name = player_name_X
+            else:
+                current_player_name = player_name_O
+            # record move
+            moves.loc[len(moves)] = {
+                "Game ID":len(games)+1,
+                "Turn":turn,
+                "Player":current_player_name,
+                "Position":(target_position[0],target_position[1])}
+            turn = turn + 1
+            if winner == None:
+                # Robot player
+                if game_type == 1:
+                    current_player = self.other_player(current_player)
+                    bot = Bot()
+                    target_position = bot.random_move(board)
+                    board = self.update_board(board,target_position,current_player)
+                    print(self.print_board(board))
+                    is_win = self.get_winner(board)
+                    winner = self.game_state(is_win,board)
+                    # record move
+                    moves.loc[len(moves)] = {
+                        "Game ID":len(games)+1,
+                        "Turn":turn,
+                        "Player":"Bot",
+                        "Position":(target_position[0],target_position[1])}
+                    turn = turn + 1
+                # Human player
+                current_player = self.other_player(current_player)
+                print("Take a turn, %s turn" %current_player)
+        if winner == "X" or winner == "O":
+            print("The winner is %s !" %winner)
+        elif winner == "Draw":
+            print("This game is draw!")
+
+        if winner == "X":
+            winner_name = player_name_X
+        elif winner == "O":
+            winner_name = player_name_O
+        else:
+            winner_name = "Draw"
+        games.loc[len(games)] = {
+            "Game ID":len(games)+1,
+            "Player 1":player_name_O,
+            "Player 2":player_name_X,
+            "Winner":winner_name,
+            }
+
+        moves.to_csv(move_filename, encoding='utf-8', index=False)
+        games.to_csv(games_filename, encoding='utf-8', index=False)
 
 
                 
@@ -148,6 +207,7 @@ class Bot():
                 target_col = col
         target_position = str(target_row)+str(target_col)
         return target_position
+
 
 
 if __name__ == '__main__':
